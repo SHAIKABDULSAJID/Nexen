@@ -29,5 +29,36 @@ export default defineConfig(({ mode }) => {
         "@": path.resolve(__dirname, "."),
       },
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes("node_modules")) {
+              return;
+            }
+
+            if (
+              id.includes("react") ||
+              id.includes("react-dom") ||
+              id.includes("scheduler")
+            ) {
+              return "react-vendor";
+            }
+
+            if (id.includes("lucide-react")) {
+              return "icons-vendor";
+            }
+
+            if (id.includes("motion")) {
+              return "motion-vendor";
+            }
+
+            if (id.includes("react-markdown")) {
+              return "markdown-vendor";
+            }
+          },
+        },
+      },
+    },
   };
 });
