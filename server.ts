@@ -4,11 +4,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import { GoogleGenAI } from "@google/genai";
 import { User, IUser } from "./models/User";
 import { Post } from "./models/Post";
 import { Pitch } from "./models/Pitch";
 import { ChatModel, IChat } from "./models/Chat";
+import { FaqModel } from "./models/Faq";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -58,11 +58,85 @@ async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3002;
 
+  const DEFAULT_FAQS = [
+    {
+      question: "How do I create a new post?",
+      answer:
+        "Go to Home feed, use the Create Post box, add text or image, and click Post.",
+      keywords: ["create post", "new post", "publish", "home feed", "post"],
+      category: "posts",
+    },
+    {
+      question: "How can I edit or delete my post?",
+      answer:
+        "Open the three-dot menu on your own post, then choose Edit post or Delete post.",
+      keywords: ["edit post", "delete post", "post menu", "three dot"],
+      category: "posts",
+    },
+    {
+      question: "How do likes and comments work?",
+      answer:
+        "Use the heart icon to like/unlike a post. Use the comment icon to open comments and add a new comment or reply.",
+      keywords: ["like", "comment", "reply", "heart", "engagement"],
+      category: "posts",
+    },
+    {
+      question: "How do I view or update my profile?",
+      answer:
+        "Use the Profile section from the left panel or profile menu, then open Profile Settings to update your details.",
+      keywords: ["profile", "settings", "update profile", "bio", "avatar"],
+      category: "profile",
+    },
+    {
+      question: "How do I find and follow other users?",
+      answer:
+        "Use search or Suggested Founders in the right panel, then click Follow. You can unfollow from the same control.",
+      keywords: ["follow", "unfollow", "users", "search people", "founders"],
+      category: "network",
+    },
+    {
+      question: "How do I use saved posts?",
+      answer:
+        "Save a post from the post actions, then open the Saved Post tab to view all saved items.",
+      keywords: ["saved", "bookmark", "saved posts", "save post"],
+      category: "saved",
+    },
+    {
+      question: "How does Launchpad work?",
+      answer:
+        "Launchpad is for startup ideas and pitches. You can submit ideas, browse top/new pitches, vote, and comment.",
+      keywords: ["launchpad", "pitch", "idea", "vote", "startup"],
+      category: "launchpad",
+    },
+    {
+      question: "How do direct messages work?",
+      answer:
+        "Open the Messages tab to start or continue chats with users. You can send text messages in each conversation.",
+      keywords: ["messages", "chat", "dm", "conversation"],
+      category: "messages",
+    },
+    {
+      question: "What does the AI Assistant do now?",
+      answer:
+        "AI Assistant answers using data in your database, including posts, users, pitches, and stored FAQ entries.",
+      keywords: ["ai assistant", "database", "faq", "help"],
+      category: "assistant",
+    },
+    {
+      question: "How can I refresh the home feed?",
+      answer:
+        "Click Home in the left navigation to refresh and fetch the latest feed posts from the database.",
+      keywords: ["refresh", "home", "feed", "reload posts"],
+      category: "feed",
+    },
+  ];
+
   app.use(cors());
   app.use(express.json({ limit: "10mb" }));
 
   // MongoDB Connection
   const MONGODB_URI = process.env.MONGODB_URI;
+  const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || "nexen";
 
   if (!MONGODB_URI) {
     console.error(
@@ -72,8 +146,18 @@ async function startServer() {
   }
 
   try {
-    await mongoose.connect(MONGODB_URI);
-    console.log("✅ Connected to MongoDB");
+    await mongoose.connect(MONGODB_URI, {
+      dbName: MONGODB_DB_NAME,
+    });
+    console.log(`✅ Connected to MongoDB (db: ${mongoose.connection.name})`);
+
+    for (const faq of DEFAULT_FAQS) {
+      await FaqModel.updateOne(
+        { question: faq.question },
+        { $set: faq },
+        { upsert: true },
+      );
+    }
   } catch (err) {
     console.error("❌ MongoDB connection error:", err);
   }
@@ -1000,7 +1084,219 @@ async function startServer() {
       status: "ok",
       database:
         mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+      databaseName: mongoose.connection.name,
     });
+  });
+
+  const compactText = (value: string) =>
+    String(value || "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const summarizeText = (value: string, max = 180) => {
+    const text = compactText(value);
+    if (!text) return "No content provided.";
+
+    const firstSentence = text
+      .split(/[.!?]/)
+      .find((part) => part.trim().length);
+    if (firstSentence && firstSentence.trim().length <= max) {
+      return `${firstSentence.trim()}.`;
+    }
+
+    if (text.length <= max) return text;
+    return `${text.slice(0, max - 3).trimEnd()}...`;
+  };
+
+  const respondFromDatabase = async (message: string, context: any[] = []) => {
+    const query = compactText(message).toLowerCase();
+    const assistantStartMessage = "Please ask questions related to app.";
+    const asksAboutUsers =
+      query.includes("user") ||
+      query.includes("users") ||
+      query.includes("founder") ||
+      query.includes("founders") ||
+      query.includes("people") ||
+      query.includes("member") ||
+      query.includes("members");
+
+    if (asksAboutUsers) {
+      const users = await User.find().sort({ createdAt: -1 }).limit(50);
+
+      const visibleUsers = users.filter((u) => {
+        const name = compactText(u.name || "").toLowerCase();
+        const username = compactText(u.username || "").toLowerCase();
+        const email = compactText(u.email || "").toLowerCase();
+
+        const isProbeName = name.startsWith("crash probe");
+        const isProbeUsername = username.startsWith("probe_");
+        const isDemoUser =
+          username.includes("demo") ||
+          username.includes("test") ||
+          name.includes("demo user") ||
+          email.endsWith("@test.com") ||
+          email.endsWith("@example.com");
+
+        return !(isProbeName || isProbeUsername || isDemoUser);
+      });
+
+      if (!visibleUsers.length) {
+        return "No users found in the application yet.";
+      }
+
+      const ignoreTokens = new Set([
+        "user",
+        "users",
+        "founder",
+        "founders",
+        "people",
+        "member",
+        "members",
+        "show",
+        "list",
+        "latest",
+        "recent",
+        "top",
+        "about",
+        "the",
+        "app",
+      ]);
+
+      const queryTokens = query
+        .replace(/[^a-z0-9\s]/gi, " ")
+        .split(/\s+/)
+        .filter((t) => t.length > 1 && !ignoreTokens.has(t));
+
+      const matched = queryTokens.length
+        ? visibleUsers.filter((u) => {
+            const haystack = compactText(
+              `${u.name} ${u.username} ${u.role || ""} ${u.company || ""} ${u.location || ""}`,
+            ).toLowerCase();
+            return queryTokens.some((token) => haystack.includes(token));
+          })
+        : visibleUsers;
+
+      const selected = (matched.length ? matched : visibleUsers).slice(0, 5);
+
+      const lines = selected.map((u, idx) => {
+        const roleCompany = compactText(
+          `${u.role || ""}${u.company ? ` at ${u.company}` : ""}`,
+        );
+        const location = compactText(u.location || "");
+        const suffixParts = [roleCompany, location].filter((part) => part);
+        const suffix = suffixParts.length ? ` - ${suffixParts.join(" | ")}` : "";
+        return `${idx + 1}. ${u.name} (@${u.username})${suffix}`;
+      });
+
+      return `Here are some users from the application:\n${lines.join("\n")}`;
+    }
+
+    const asksRecordDetails =
+      query.includes("count") ||
+      query.includes("how many") ||
+      query.includes("total") ||
+      query.includes("stats") ||
+      query.includes("number of") ||
+      query.includes("latest") ||
+      query.includes("recent") ||
+      query.includes("list") ||
+      query.includes("show") ||
+      query.includes("top") ||
+      query.includes("saved") ||
+      query.includes("summar");
+
+    if (asksRecordDetails) {
+      return assistantStartMessage;
+    }
+
+    const faqs = await FaqModel.find().sort({ updatedAt: -1 }).limit(100);
+
+    if (query) {
+      const queryTokens = new Set(
+        query
+          .replace(/[^a-z0-9\s]/gi, " ")
+          .split(/\s+/)
+          .filter((t) => t.length > 1),
+      );
+
+      let bestFaq: (typeof faqs)[number] | null = null;
+      let bestScore = 0;
+
+      for (const faq of faqs) {
+        const questionText = compactText(faq.question).toLowerCase();
+        const keywordList = (faq.keywords || []).map((k) =>
+          compactText(k).toLowerCase(),
+        );
+
+        let score = 0;
+        if (questionText.includes(query) || query.includes(questionText)) {
+          score += 5;
+        }
+
+        for (const keyword of keywordList) {
+          if (keyword && query.includes(keyword)) {
+            score += 3;
+          }
+        }
+
+        const questionTokens = questionText
+          .split(/\s+/)
+          .filter((t) => t.length > 1);
+        for (const token of questionTokens) {
+          if (queryTokens.has(token)) {
+            score += 1;
+          }
+        }
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestFaq = faq;
+        }
+      }
+
+      if (bestFaq && bestScore >= 3) {
+        return `${bestFaq.answer}\n\n(From FAQ: ${bestFaq.question})`;
+      }
+    }
+
+    if (
+      query.includes("latest") ||
+      query.includes("recent") ||
+      query.includes("new post") ||
+      query.includes("feed") ||
+      query.includes("post") ||
+      query.includes("founder") ||
+      query.includes("user") ||
+      query.includes("people") ||
+      query.includes("community") ||
+      query.includes("pitch") ||
+      query.includes("idea") ||
+      query.includes("launchpad") ||
+      (context.length > 0 &&
+        (query.includes("saved") || query.includes("summar")))
+    ) {
+      return assistantStartMessage;
+    }
+
+    return assistantStartMessage;
+  };
+
+  app.get("/api/faqs", async (req, res) => {
+    try {
+      const faqs = await FaqModel.find().sort({ category: 1, question: 1 });
+      res.json(
+        faqs.map((faq) => ({
+          id: faq._id,
+          question: faq.question,
+          answer: faq.answer,
+          keywords: faq.keywords || [],
+          category: faq.category || "general",
+        })),
+      );
+    } catch (error) {
+      console.error("Get FAQs error:", error);
+      res.status(500).json({ error: "Failed to fetch FAQs" });
+    }
   });
 
   // AI Chat endpoint
@@ -1012,88 +1308,17 @@ async function startServer() {
         return res.status(400).json({ error: "Message is required" });
       }
 
-      // Check if the message is related to the app
-      const appKeywords = [
-        "nexen",
-        "post",
-        "pitch",
-        "community",
-        "profile",
-        "messaging",
-        "network",
-        "follow",
-        "like",
-        "comment",
-        "feed",
-        "discover",
-        "save",
-        "share",
-        "app",
-        "feature",
-        "how do i",
-        "how to",
-        "what is",
-        "about",
-        "help",
-        "question",
-        "idea",
-        "startup",
-        "tech",
-        "professional",
-        "connection",
-        "collaboration",
-      ];
-
-      const messageLower = message.toLowerCase();
-      const isAppRelated = appKeywords.some((keyword) =>
-        messageLower.includes(keyword),
+      const responseText = await respondFromDatabase(
+        message,
+        Array.isArray(context) ? context : [],
       );
-
-      if (!isAppRelated) {
-        return res.json({
-          response:
-            "I'm here to help with questions about the Nexen app and related topics like startups, tech, and professional networking. Could you rephrase your question to focus on these areas?",
-        });
-      }
-
-      const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
-      if (!apiKey) {
-        return res.status(500).json({ error: "AI service not configured" });
-      }
-
-      const ai = new GoogleGenAI({ apiKey });
-
-      const contextText =
-        context && context.length > 0
-          ? context
-              .map((p: any) => `Post by ${p.user.name}: ${p.content}`)
-              .join("\n\n")
-          : "No saved posts yet.";
-
-      const prompt = `
-        You are an AI assistant helping a user on a tech social network called Nexen.
-        IMPORTANT: Only answer questions that are related to the Nexen app, professional networking, tech, or startups. 
-        Do not answer unrelated general knowledge questions.
-        
-        Here are the user's saved posts for context:
-        ${contextText}
-
-        User question: ${message}
-        
-        Answer only app-related questions. If the question relates to their saved posts, use the context provided. Keep it concise and friendly.
-      `;
-
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: prompt,
-      });
-
-      const responseText = response.text || "I couldn't generate a response.";
 
       res.json({ response: responseText });
     } catch (error) {
       console.error("AI Chat error:", error);
-      res.status(500).json({ error: "Failed to process AI request" });
+      res.json({
+        response: "Please ask questions related to app.",
+      });
     }
   });
 
@@ -1106,24 +1331,13 @@ async function startServer() {
         return res.status(400).json({ error: "Content is required" });
       }
 
-      const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
-      if (!apiKey) {
-        return res.status(500).json({ error: "AI service not configured" });
-      }
-
-      const ai = new GoogleGenAI({ apiKey });
-
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `Summarize this post in one sentence: ${content}`,
-      });
-
-      const summary = response.text || "Could not generate summary.";
+      const summary = summarizeText(content, 180);
 
       res.json({ summary });
     } catch (error) {
       console.error("AI Summarize error:", error);
-      res.status(500).json({ error: "Failed to summarize content" });
+      const { content } = req.body || {};
+      res.json({ summary: summarizeText(content, 180) });
     }
   });
 
@@ -1218,7 +1432,15 @@ async function startServer() {
   if (process.env.NODE_ENV !== "production") {
     const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
-      server: { middlewareMode: true, hmr: false },
+      server: {
+        middlewareMode: true,
+        hmr: {
+          host: "localhost",
+          port: 24679,
+          clientPort: 24679,
+          overlay: false,
+        },
+      },
       appType: "spa",
     });
     app.use(vite.middlewares);

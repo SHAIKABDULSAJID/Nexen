@@ -62,7 +62,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
   };
 
   return (
-    <div className="hidden lg:block lg:col-span-3 space-y-6 sticky top-24 self-start">
+    <div className="hidden lg:block lg:col-span-3 lg:h-[calc(100vh-88px)] lg:overflow-y-auto lg:pr-1 space-y-6 self-start">
       {/* Trending News */}
       <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-all hover:shadow-lg hover:shadow-blue-200 dark:hover:shadow-blue-900/20 duration-300">
         <div className="flex items-center justify-between mb-4">

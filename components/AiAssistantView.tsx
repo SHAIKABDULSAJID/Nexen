@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, Loader2, Bot, ArrowLeft } from "lucide-react";
+import { Send, Sparkles, Bot, ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Post, User } from "../types";
 import { CURRENT_USER } from "../constants";
@@ -13,6 +13,13 @@ interface Message {
   role: "user" | "model";
   content: string;
 }
+
+const STARTER_PROMPTS = [
+  "How do I create my first post?",
+  "How does Launchpad work?",
+  "How can I update my profile?",
+  "How do I use saved posts?",
+];
 
 const AiAssistantView: React.FC<AiAssistantViewProps> = ({
   savedPosts,
@@ -76,6 +83,14 @@ const AiAssistantView: React.FC<AiAssistantViewProps> = ({
     }
   };
 
+  const sendStarterPrompt = (prompt: string) => {
+    if (isLoading) return;
+    setInput(prompt);
+    setTimeout(() => {
+      void handleSend();
+    }, 0);
+  };
+
   return (
     <div className="md:col-span-12 lg:col-span-12 h-full flex flex-col bg-white dark:bg-slate-950 transition-colors duration-300">
       {/* Header */}
@@ -106,7 +121,7 @@ const AiAssistantView: React.FC<AiAssistantViewProps> = ({
         ref={containerRef}
         className="flex-1 overflow-y-auto scroll-smooth pb-32"
       >
-        <div className="max-w-3xl mx-auto px-6 py-12 space-y-12">
+        <div className="max-w-3xl mx-auto px-6 py-10 space-y-8">
           {messages.length === 0 && !isLoading && (
             <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
@@ -119,13 +134,25 @@ const AiAssistantView: React.FC<AiAssistantViewProps> = ({
                 How can I help you today? I can analyze your saved posts,
                 brainstorm ideas, or just chat.
               </p>
+              <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                {STARTER_PROMPTS.map((prompt) => (
+                  <button
+                    key={prompt}
+                    type="button"
+                    onClick={() => sendStarterPrompt(prompt)}
+                    className="text-left px-3 py-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`flex gap-6 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
               {msg.role === "model" && (
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center shrink-0 mt-1">
@@ -133,10 +160,27 @@ const AiAssistantView: React.FC<AiAssistantViewProps> = ({
                 </div>
               )}
               <div
-                className={`max-w-[85%] ${msg.role === "user" ? "bg-slate-100 dark:bg-white/10 rounded-3xl px-6 py-3" : ""}`}
+                className={`max-w-[85%] rounded-2xl px-4 py-3 border ${
+                  msg.role === "user"
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white dark:bg-white/5 border-slate-200 dark:border-white/10"
+                }`}
               >
+                <p
+                  className={`text-[11px] font-bold uppercase tracking-wide mb-1 ${
+                    msg.role === "user"
+                      ? "text-blue-100"
+                      : "text-slate-500 dark:text-slate-400"
+                  }`}
+                >
+                  {msg.role === "user" ? "You" : "Nexen Assistant"}
+                </p>
                 <div
-                  className={`text-[15px] leading-relaxed ${msg.role === "user" ? "text-slate-800 dark:text-slate-100" : "text-slate-700 dark:text-slate-200"}`}
+                  className={`text-[15px] leading-relaxed ${
+                    msg.role === "user"
+                      ? "text-white"
+                      : "text-slate-700 dark:text-slate-200"
+                  }`}
                 >
                   <ReactMarkdown
                     components={{
@@ -155,7 +199,7 @@ const AiAssistantView: React.FC<AiAssistantViewProps> = ({
                       ),
                       li: ({ children }) => <li>{children}</li>,
                       code: ({ children }) => (
-                        <code className="bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded font-mono text-sm">
+                        <code className="bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded font-mono text-sm text-slate-800 dark:text-slate-100">
                           {children}
                         </code>
                       ),
@@ -208,7 +252,7 @@ const AiAssistantView: React.FC<AiAssistantViewProps> = ({
                   handleSend();
                 }
               }}
-              placeholder="Enter a prompt here"
+              placeholder="Ask Nexen Assistant anything about using the app"
               className="w-full pl-6 pr-14 py-4 bg-transparent text-slate-900 dark:text-white placeholder:text-slate-500 outline-none resize-none max-h-40"
               style={{ height: "auto" }}
               disabled={isLoading}

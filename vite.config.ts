@@ -4,17 +4,18 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, ".", "");
+  const backendUrl =
+    env.VITE_BACKEND_URL || env.BACKEND_URL || "http://localhost:3000";
+
   return {
     server: {
-      port: 3002,
+      // Keep client dev server separate from the API server.
+      port: 5173,
       strictPort: true,
       host: "0.0.0.0",
-      hmr: {
-        host: "localhost",
-      },
       proxy: {
         "/api": {
-          target: "http://localhost:3002",
+          target: backendUrl,
           changeOrigin: true,
         },
       },
