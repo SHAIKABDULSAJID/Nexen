@@ -8,6 +8,7 @@
     "dev:client": "vite",
     "dev:server": "tsx server.ts",
     "dev:hot": "vite",
+    "start": "NODE_ENV=production tsx server.ts",
     "server": "node --input-type=module --eval \"import('./server.ts')\"",
     "build": "vite build",
     "preview": "vite preview",

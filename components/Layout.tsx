@@ -379,7 +379,7 @@ const Layout: React.FC<LayoutProps> = ({
         </div>
       </header>
       <main
-        className={`flex-1 ${activeTab === "chats" || activeTab === "ai-assistant" ? "max-w-7xl" : "max-w-6xl"} mx-auto w-full px-4 py-6 md:grid md:grid-cols-12 md:gap-6 relative z-10 ${activeTab === "chats" || activeTab === "ai-assistant" ? "h-[calc(100vh-64px)] overflow-hidden box-border py-3" : ""}`}
+        className={`flex-1 ${activeTab === "chats" || activeTab === "ai-assistant" ? "max-w-7xl" : "max-w-6xl"} mx-auto w-full px-4 py-6 md:grid md:grid-cols-12 md:gap-6 relative z-10 md:h-[calc(100vh-64px)] md:overflow-hidden box-border md:py-3`}
       >
         {children}
       </main>

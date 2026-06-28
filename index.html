@@ -64,6 +64,31 @@
       }
     </style>
     <link rel="stylesheet" href="/index.css" />
+    <script>
+      // Guard against dev websocket bootstrap failures causing a blank screen.
+      (function () {
+        const suppressedMessage = "WebSocket closed without opened.";
+
+        window.addEventListener("error", function (event) {
+          const message = String(event?.message || "");
+          if (message.includes(suppressedMessage)) {
+            event.preventDefault();
+          }
+        });
+
+        window.addEventListener("unhandledrejection", function (event) {
+          const reason = event?.reason;
+          const message =
+            typeof reason === "string"
+              ? reason
+              : String(reason?.message || reason || "");
+
+          if (message.includes(suppressedMessage)) {
+            event.preventDefault();
+          }
+        });
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

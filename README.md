@@ -12,12 +12,14 @@ A modern full-stack application with AI capabilities.
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone <repository-url>
    cd nexen
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
@@ -25,6 +27,7 @@ A modern full-stack application with AI capabilities.
 3. Set up environment variables:
    - Copy `.env.example` to `.env`
    - Fill in your `GEMINI_API_KEY` and other required variables.
+   - Set `MONGODB_URI` to your MongoDB Atlas URI (`mongodb+srv://...`).
 
 ### Running the App
 
@@ -48,9 +51,27 @@ npm run build
 npm start
 ```
 
+## Deploying to Render
+
+1. Push this project to GitHub.
+2. In Render, click **New +** -> **Blueprint** and select your repo.
+3. Render will detect [render.yaml](render.yaml) and create the web service.
+4. In Render environment variables, set:
+   - `MONGODB_URI` (Atlas URI)
+   - `GEMINI_API_KEY` (or `API_KEY`)
+   - `JWT_SECRET`
+5. Deploy and open your Render URL after build completes.
+
+Render uses:
+
+- Build command: `npm install && npm run build`
+- Start command: `npm start`
+- Health check path: `/api/health`
+
 ## VS Code Extensions
 
 For the best experience, we recommend installing the following extensions:
+
 - ESLint
 - Prettier
 - Tailwind CSS IntelliSense

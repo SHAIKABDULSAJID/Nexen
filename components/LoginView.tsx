@@ -123,7 +123,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
     throw (
       lastError ||
       new Error(
-        "Cannot reach backend server. Open app via http://localhost:3002 and ensure npm run dev is running.",
+        "Cannot reach backend server. Open app via http://localhost:3000 and ensure npm run dev is running.",
       )
     );
   };
@@ -164,7 +164,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         error instanceof Error && error.name === "AbortError"
           ? "Login request timed out. Please try again."
           : rawMessage === "Failed to fetch"
-            ? "Cannot connect to backend. Start server with npm run dev and open http://localhost:3002."
+            ? "Cannot connect to backend. Start server with npm run dev and open http://localhost:3000."
             : error instanceof Error
               ? error.message
               : "Authentication failed",
@@ -212,7 +212,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         error instanceof Error && error.name === "AbortError"
           ? "Google login request timed out. Please try again."
           : rawMessage === "Failed to fetch"
-            ? "Cannot connect to backend. Start server with npm run dev and open http://localhost:3002."
+            ? "Cannot connect to backend. Start server with npm run dev and open http://localhost:3000."
             : error instanceof Error
               ? error.message
               : "Google authentication failed",

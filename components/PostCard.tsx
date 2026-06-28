@@ -45,6 +45,7 @@ const PostCard: React.FC<PostCardProps> = ({
   onAddComment,
   onUserClick,
 }) => {
+  const CONTENT_PREVIEW_LIMIT = 280;
   const [liked, setLiked] = useState(
     (post.likedByUsers || []).some((u) => u.id === currentUser.id),
   );
@@ -71,6 +72,7 @@ const PostCard: React.FC<PostCardProps> = ({
   const [summary, setSummary] = useState<string | null>(null);
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [isSavingEdit, setIsSavingEdit] = useState(false);
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
 
   const isOwner = currentUser.id === post.userId;
 
@@ -79,7 +81,14 @@ const PostCard: React.FC<PostCardProps> = ({
     setComments(post.commentList || []);
     setLiked((post.likedByUsers || []).some((u) => u.id === currentUser.id));
     setEditedContent(post.content);
+    setIsContentExpanded(false);
   }, [post.likes, post.commentList, post.likedByUsers, currentUser.id]);
+
+  const postContent = post.content || "";
+  const isLongContent = postContent.length > CONTENT_PREVIEW_LIMIT;
+  const previewContent = isLongContent
+    ? `${postContent.slice(0, CONTENT_PREVIEW_LIMIT).trimEnd()}...`
+    : postContent;
 
   if (isMuted) return null;
 
@@ -436,9 +445,20 @@ const PostCard: React.FC<PostCardProps> = ({
               </div>
             </div>
           ) : (
-            <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">
-              {post.content}
-            </p>
+            <div>
+              <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">
+                {isContentExpanded ? postContent : previewContent}
+              </p>
+              {isLongContent && (
+                <button
+                  type="button"
+                  onClick={() => setIsContentExpanded((prev) => !prev)}
+                  className="mt-2 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  {isContentExpanded ? "Read less" : "Read more"}
+                </button>
+              )}
+            </div>
           )}
 
           {post.image && (

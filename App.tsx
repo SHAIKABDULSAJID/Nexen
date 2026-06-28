@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Layout from "./components/Layout";
 import Sidebar from "./components/Sidebar";
 import RightPanel from "./components/RightPanel";
@@ -63,6 +63,36 @@ const formatTimestamp = (value?: string) => {
   return date.toLocaleDateString();
 };
 
+const normalizeUserFromApi = (userData: any): User => {
+  const id = String(userData?.id || userData?._id || `user-${Date.now()}`);
+  const email = String(userData?.email || "");
+  const fallbackName = email.includes("@") ? email.split("@")[0] : "User";
+  const name = String(userData?.name || fallbackName || "User");
+  const username = String(
+    userData?.username || fallbackName || `user_${id.slice(0, 6)}`,
+  );
+
+  return {
+    id,
+    name,
+    username,
+    email,
+    avatar: userData?.avatar || DEFAULT_AVATAR_PATH,
+    bio: String(userData?.bio || ""),
+    role: String(userData?.role || ""),
+    company: String(userData?.company || ""),
+    location: String(userData?.location || ""),
+    website: String(userData?.website || ""),
+    phone: String(userData?.phone || ""),
+    followingIds: Array.isArray(userData?.followingIds)
+      ? userData.followingIds
+      : [],
+    followerIds: Array.isArray(userData?.followerIds)
+      ? userData.followerIds
+      : [],
+  };
+};
+
 const App: React.FC = () => {
   useEffect(() => {
     console.log("🧠 App mounted");
@@ -114,21 +144,7 @@ const App: React.FC = () => {
           }
         })
         .then((userData) => {
-          setCurrentUser({
-            id: userData.id,
-            name: userData.name,
-            username: userData.username,
-            email: userData.email,
-            avatar: userData.avatar,
-            bio: userData.bio,
-            role: userData.role,
-            company: userData.company,
-            location: userData.location,
-            website: userData.website,
-            phone: userData.phone,
-            followingIds: userData.followingIds || [],
-            followerIds: userData.followerIds || [],
-          });
+          setCurrentUser(normalizeUserFromApi(userData));
           setAuthToken(token);
           setIsAuthenticated(true);
           setIsSetupComplete(true); // Assume setup is complete for existing users
@@ -140,30 +156,35 @@ const App: React.FC = () => {
     }
   }, []);
 
+  const refreshFeed = useCallback(() => {
+    if (!isAuthenticated || !authToken || !isSetupComplete) {
+      return Promise.resolve();
+    }
+
+    return fetch("/api/posts", {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Failed to fetch posts");
+      })
+      .then((fetchedPosts) => {
+        const postsWithUserData = fetchedPosts.map(normalizePostFromApi);
+        setPosts(postsWithUserData);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch posts:", error);
+      });
+  }, [isAuthenticated, authToken, isSetupComplete]);
+
   // Fetch all posts when authenticated
   React.useEffect(() => {
-    if (isAuthenticated && authToken && isSetupComplete) {
-      fetch("/api/posts", {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Failed to fetch posts");
-          }
-        })
-        .then((fetchedPosts) => {
-          const postsWithUserData = fetchedPosts.map(normalizePostFromApi);
-          setPosts(postsWithUserData);
-        })
-        .catch((error) => {
-          console.error("Failed to fetch posts:", error);
-        });
-    }
-  }, [isAuthenticated, authToken, isSetupComplete]);
+    refreshFeed();
+  }, [refreshFeed]);
 
   // Fetch all pitches from database
   React.useEffect(() => {
@@ -295,7 +316,7 @@ const App: React.FC = () => {
     );
   };
 
-  const normalizePostFromApi = (post: any): Post => {
+  function normalizePostFromApi(post: any): Post {
     const fallbackPostUser = post.user || currentUser;
 
     return {
@@ -321,7 +342,7 @@ const App: React.FC = () => {
       timestamp: formatTimestamp(post.createdAt),
       tags: post.tags || [],
     };
-  };
+  }
 
   const handleToggleFollow = async (userId: string) => {
     if (!authToken) {
@@ -767,21 +788,7 @@ const App: React.FC = () => {
 
   const handleLogin = (userData: any, token: string, isNewUser = false) => {
     // Set authenticated user data
-    setCurrentUser({
-      id: userData.id,
-      name: userData.name,
-      username: userData.username,
-      email: userData.email,
-      avatar: userData.avatar,
-      bio: userData.bio || "",
-      role: userData.role || "",
-      company: userData.company || "",
-      location: userData.location || "",
-      website: userData.website || "",
-      phone: userData.phone || "",
-      followingIds: userData.followingIds || [],
-      followerIds: userData.followerIds || [],
-    });
+    setCurrentUser(normalizeUserFromApi(userData));
     setAuthToken(token);
     setIsAuthenticated(true);
 
@@ -857,7 +864,7 @@ const App: React.FC = () => {
       throw new Error(errorData.error || "Failed to save profile");
     }
 
-    const savedUser = await response.json();
+    const savedUser = normalizeUserFromApi(await response.json());
     setCurrentUser(savedUser);
 
     setPosts((prevPosts) =>
@@ -945,7 +952,7 @@ const App: React.FC = () => {
     switch (activeTab) {
       case "home":
         return (
-          <div className="md:col-span-12 lg:col-span-6 space-y-4">
+          <div className="md:col-span-12 lg:col-span-6 space-y-4 lg:h-[calc(100vh-88px)] lg:overflow-y-auto lg:pr-1">
             <CreatePost onPost={handlePost} currentUser={currentUser} />
             <div className="space-y-4 pb-20 md:pb-0">
               {posts.map((post) => (
@@ -1008,7 +1015,7 @@ const App: React.FC = () => {
         );
       case "saved":
         return (
-          <div className="md:col-span-12 lg:col-span-6 space-y-4">
+          <div className="md:col-span-12 lg:col-span-6 space-y-4 lg:h-[calc(100vh-88px)] lg:overflow-y-auto lg:pr-1">
             <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-4">
               Saved Posts
             </h1>
@@ -1058,7 +1065,7 @@ const App: React.FC = () => {
         });
 
         return (
-          <div className="md:col-span-12 lg:col-span-6 space-y-6">
+          <div className="md:col-span-12 lg:col-span-6 space-y-6 lg:h-[calc(100vh-88px)] lg:overflow-y-auto lg:pr-1">
             <div className="flex items-start justify-between px-1">
               <div>
                 <h2 className="text-2xl font-black text-slate-900 dark:text-white leading-tight">
@@ -1178,6 +1185,31 @@ const App: React.FC = () => {
     }
   };
 
+  const handleTabChange = (
+    tab:
+      | "home"
+      | "chats"
+      | "community"
+      | "discover"
+      | "saved"
+      | "ai-assistant"
+      | "profile"
+      | "launchpad",
+  ) => {
+    if (tab === "profile") {
+      setActiveProfileUser(currentUser);
+    }
+    if (tab !== "chats") {
+      setChatPrefillUser(null);
+    }
+    setActiveTab(tab);
+
+    if (tab === "home") {
+      setActiveCommunity(null);
+      void refreshFeed();
+    }
+  };
+
   return (
     <Layout
       currentUser={currentUser}
@@ -1188,16 +1220,7 @@ const App: React.FC = () => {
           ? "home"
           : activeTab
       }
-      onTabChange={(tab) => {
-        if (tab === ("profile" as any)) {
-          setActiveProfileUser(currentUser);
-        }
-        if (tab !== "chats") {
-          setChatPrefillUser(null);
-        }
-        setActiveTab(tab);
-        if (tab === "home") setActiveCommunity(null);
-      }}
+      onTabChange={handleTabChange}
       onLogout={handleLogout}
       posts={posts}
       theme={theme}
@@ -1209,7 +1232,7 @@ const App: React.FC = () => {
       {activeTab !== "chats" && activeTab !== "ai-assistant" && (
         <Sidebar
           activeTab={activeTab as any}
-          onTabChange={setActiveTab as any}
+          onTabChange={handleTabChange as any}
           currentUser={currentUser}
           onOpenNetwork={() => setIsNetworkOpen(true)}
           onOpenPremium={() => setIsPremiumOpen(true)}
