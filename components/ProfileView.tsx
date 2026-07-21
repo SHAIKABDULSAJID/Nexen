@@ -53,7 +53,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({
       <div className="flex items-center gap-4 mb-4">
         <button
           onClick={onBack}
-          className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition-colors"
+          className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition-all hover:-translate-y-0.5"
         >
           <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" />
         </button>
@@ -63,20 +63,20 @@ const ProfileView: React.FC<ProfileViewProps> = ({
       </div>
 
       {/* Profile Info */}
-      <div className="bg-white dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden">
+      <div className="bg-white dark:bg-white/5 rounded-[40px] border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
         <div className="h-32 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
         <div className="px-6 pb-6 relative">
           <img
             src={getAvatarSrc(user.avatar)}
             alt={user.name}
-            className="w-24 h-24 rounded-2xl border-4 border-white dark:border-slate-900 object-cover absolute -top-12 bg-white dark:bg-slate-800"
+            className="w-24 h-24 rounded-[28px] border-4 border-white dark:border-slate-900 object-cover absolute -top-12 bg-white dark:bg-slate-800"
           />
 
           <div className="flex justify-end pt-4">
             {currentUser.id === user.id ? (
               <button
                 onClick={() => onOpenSettings && onOpenSettings()}
-                className="px-6 py-2 bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold rounded-full text-sm hover:bg-slate-200 dark:hover:bg-white/20 transition-colors border border-slate-200 dark:border-white/10"
+                className="px-6 py-2 bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold rounded-full text-sm hover:bg-slate-200 dark:hover:bg-white/20 transition-all hover:-translate-y-0.5 border border-slate-200 dark:border-white/10"
               >
                 Edit Profile
               </button>
@@ -87,7 +87,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({
                     e.stopPropagation();
                     onMessageUser && onMessageUser(user);
                   }}
-                  className="px-5 py-2 bg-white dark:bg-white/10 text-slate-900 dark:text-white font-bold rounded-full text-sm hover:bg-slate-100 dark:hover:bg-white/20 transition-colors border border-slate-200 dark:border-white/20"
+                  className="px-5 py-2 bg-white dark:bg-white/10 text-slate-900 dark:text-white font-bold rounded-full text-sm hover:bg-slate-100 dark:hover:bg-white/20 transition-all hover:-translate-y-0.5 border border-slate-200 dark:border-white/20"
                 >
                   Message
                 </button>
@@ -99,7 +99,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({
                   className={`px-6 py-2 font-bold rounded-full text-sm transition-all active:scale-95 relative z-10 ${
                     isFollowing
                       ? "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white border border-slate-200 dark:border-white/20 hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:hover:bg-red-500/10 dark:hover:text-red-400 group"
-                      : "bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20"
+                      : "bg-sky-600 text-white hover:bg-sky-700 shadow-lg shadow-sky-500/20"
                   }`}
                 >
                   <span className={isFollowing ? "group-hover:hidden" : ""}>
@@ -198,9 +198,10 @@ const ProfileView: React.FC<ProfileViewProps> = ({
             />
           ))
         ) : (
-          <div className="bg-white dark:bg-white/5 p-12 text-center rounded-2xl border border-dashed border-slate-200 dark:border-white/10">
-            <p className="text-sm text-slate-400 font-bold italic">
-              No posts yet.
+          <div className="bg-white dark:bg-white/5 p-12 text-center rounded-[40px] border border-dashed border-slate-200 dark:border-white/10">
+            <Calendar className="w-12 h-12 text-slate-300 dark:text-white/20 mx-auto mb-3" />
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-bold italic">
+              No posts yet. This profile is still getting started.
             </p>
           </div>
         )}

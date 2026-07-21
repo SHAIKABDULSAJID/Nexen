@@ -304,7 +304,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
   return (
     <div
-      className={`bg-white dark:bg-white/10 backdrop-blur-md rounded-xl border border-slate-200 dark:border-white/10 mb-4 overflow-visible transition-all hover:shadow-lg hover:shadow-blue-200 dark:hover:shadow-blue-900/20 relative duration-300 ${showMoreMenu || showShareMenu ? "z-30" : "z-0"}`}
+      className={`bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 mb-4 overflow-visible transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/70 dark:hover:shadow-slate-950/30 relative duration-300 ${showMoreMenu || showShareMenu ? "z-30" : "z-0"}`}
     >
       <div className="p-4 pb-2">
         <div className="flex items-start justify-between mb-3">
@@ -336,7 +336,7 @@ const PostCard: React.FC<PostCardProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowMoreMenu(!showMoreMenu)}
-              className={`p-2 rounded-full transition-colors ${showMoreMenu ? "bg-slate-100 dark:bg-white/10 text-blue-600 dark:text-blue-400" : "text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"}`}
+              className={`p-2 rounded-full transition-all hover:-translate-y-0.5 ${showMoreMenu ? "bg-slate-100 dark:bg-white/10 text-sky-600 dark:text-sky-400" : "text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"}`}
             >
               <MoreHorizontal className="w-5 h-5" />
             </button>
@@ -431,7 +431,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 <button
                   onClick={saveEdit}
                   disabled={isSavingEdit}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-sky-600 text-white hover:bg-sky-700 disabled:opacity-60 transition-colors"
                 >
                   {isSavingEdit ? "Saving..." : "Save"}
                 </button>
@@ -453,7 +453,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsContentExpanded((prev) => !prev)}
-                  className="mt-2 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                  className="mt-2 text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline"
                 >
                   {isContentExpanded ? "Read less" : "Read more"}
                 </button>
@@ -519,7 +519,7 @@ const PostCard: React.FC<PostCardProps> = ({
         <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-white/10">
           <button
             onClick={handleLike}
-            className={`flex items-center gap-1.5 p-2 rounded-lg hover:bg-rose-500/10 ${liked ? "text-rose-500" : "text-slate-400 hover:text-rose-400"}`}
+            className={`flex items-center gap-1.5 p-2 rounded-lg transition-all hover:-translate-y-0.5 hover:bg-rose-500/10 ${liked ? "text-rose-500" : "text-slate-400 hover:text-rose-400"}`}
           >
             <Heart className={`w-5 h-5 ${liked ? "fill-current" : ""}`} />
             <span className="text-xs font-bold">{likesCount}</span>
@@ -530,7 +530,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 expandedSection === "comments" ? null : "comments",
               )
             }
-            className={`flex items-center gap-1.5 p-2 rounded-lg ${expandedSection === "comments" ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10" : "text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10"}`}
+            className={`flex items-center gap-1.5 p-2 rounded-lg transition-all hover:-translate-y-0.5 ${expandedSection === "comments" ? "text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-500/10" : "text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-500/10"}`}
           >
             <MessageCircle className="w-5 h-5" />
             <span className="text-xs font-bold">{comments.length}</span>
@@ -541,7 +541,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 expandedSection === "reposts" ? null : "reposts",
               )
             }
-            className={`flex items-center gap-1.5 p-2 rounded-lg ${expandedSection === "reposts" ? "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10" : "text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-500/10"}`}
+            className={`flex items-center gap-1.5 p-2 rounded-lg transition-all hover:-translate-y-0.5 ${expandedSection === "reposts" ? "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10" : "text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-500/10"}`}
           >
             <Repeat2 className="w-5 h-5" />
             <span className="text-xs font-bold">{post.reposts}</span>
@@ -550,7 +550,7 @@ const PostCard: React.FC<PostCardProps> = ({
           <div className="relative">
             <button
               onClick={handleShare}
-              className="flex items-center gap-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2 rounded-lg transition-colors"
+              className="flex items-center gap-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2 rounded-lg transition-all hover:-translate-y-0.5"
             >
               <Share2 className="w-5 h-5" />
               <span className="text-xs font-bold hidden sm:inline">Share</span>
@@ -639,7 +639,7 @@ const PostCard: React.FC<PostCardProps> = ({
               ))
             ) : (
               <p className="text-center text-xs text-slate-500 dark:text-slate-400 py-2">
-                No reposts yet.
+                No reposts yet. This thread is still finding momentum.
               </p>
             )}
           </div>
@@ -647,7 +647,7 @@ const PostCard: React.FC<PostCardProps> = ({
       )}
 
       {expandedSection === "comments" && (
-        <div className="bg-slate-50 dark:bg-white/5 p-4 border-t border-slate-200 dark:border-white/10 rounded-b-xl animate-in slide-in-from-top-2 duration-200">
+        <div className="bg-slate-50 dark:bg-white/5 p-4 border-t border-slate-200 dark:border-white/10 rounded-b-2xl animate-in slide-in-from-top-2 duration-200">
           <div className="space-y-4 mb-4">
             {comments
               .filter((c) => !c.parentCommentId)
@@ -700,13 +700,13 @@ const PostCard: React.FC<PostCardProps> = ({
                                 onChange={(e) =>
                                   setEditingCommentText(e.target.value)
                                 }
-                                className="w-full px-3 py-2 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 rounded-lg text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                className="w-full px-3 py-2 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 rounded-lg text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent resize-none"
                                 rows={2}
                               />
                               <div className="flex gap-2 mt-2">
                                 <button
                                   type="submit"
-                                  className="flex-1 px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-bold hover:bg-blue-700 transition-colors"
+                                  className="flex-1 px-3 py-1.5 bg-sky-600 text-white rounded text-xs font-bold hover:bg-sky-700 transition-colors"
                                 >
                                   Save
                                 </button>
@@ -782,12 +782,12 @@ const PostCard: React.FC<PostCardProps> = ({
                                 value={replyText}
                                 onChange={(e) => setReplyText(e.target.value)}
                                 placeholder="Write a reply..."
-                                className="w-full pl-3 pr-9 py-1.5 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full pl-3 pr-9 py-1.5 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                               />
                               <button
                                 type="submit"
                                 disabled={!replyText.trim()}
-                                className="absolute right-0.5 top-1/2 -translate-y-1/2 p-1 bg-blue-600 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors"
+                                className="absolute right-0.5 top-1/2 -translate-y-1/2 p-1 bg-sky-600 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-sky-700 transition-colors"
                               >
                                 <Send className="w-2.5 h-2.5" />
                               </button>

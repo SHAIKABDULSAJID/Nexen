@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Logo from "./Logo";
+import KineticGrid from "./KineticGrid";
 import {
   Rocket,
   ShieldCheck,
@@ -460,40 +461,61 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center overflow-x-hidden relative transition-colors duration-300">
-      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-100 dark:bg-blue-900/20 rounded-full blur-[120px] -z-10" />
-      <header className="w-full max-w-6xl px-6 py-4 flex justify-between items-center z-10">
-        <div className="cursor-pointer" onClick={() => setView("hero")}>
-          <Logo className="h-8 md:h-10 text-slate-900 dark:text-white" />
+    <div className="min-h-screen flex flex-col items-center overflow-hidden relative transition-colors duration-300 bg-transparent">
+      <div className="absolute inset-0 z-0">
+        <KineticGrid
+          background="transparent"
+          dotColor="rgba(255,255,255,0.88)"
+          lineColor="rgba(96,165,250,0.8)"
+          trailColor="rgba(59,130,246,0.9)"
+          spacing={28}
+          radius={131}
+          strength={7}
+          trail={true}
+          style={{ opacity: 1 }}
+        />
+      </div>
+      <header className="pointer-events-none relative z-20 w-full max-w-6xl px-6 pt-4">
+        <div className="flex items-start justify-between gap-4">
+          <div
+            className="pointer-events-auto flex items-center -ml-8"
+            onClick={() => setView("hero")}
+          >
+            <Logo className="h-12 md:h-14 text-slate-900 dark:text-white" />
+          </div>
+          <div className="hidden md:flex items-center gap-3 pointer-events-auto">
+            <button
+              onClick={() => setView("messages")}
+              className={`login-floating-chip text-xs font-bold transition-colors ${view === "messages" ? "login-floating-active" : "login-floating-inactive"}`}
+              style={{ animationDelay: "0.15s" }}
+            >
+              Messages
+            </button>
+            <button
+              onClick={() => setView("communities")}
+              className={`login-floating-chip text-xs font-bold transition-colors ${view === "communities" ? "login-floating-active" : "login-floating-inactive"}`}
+              style={{ animationDelay: "0.3s" }}
+            >
+              Communities
+            </button>
+            <button
+              onClick={() => setView("about")}
+              className={`login-floating-chip text-xs font-bold transition-colors ${view === "about" ? "login-floating-active" : "login-floating-inactive"}`}
+              style={{ animationDelay: "0.45s" }}
+            >
+              About
+            </button>
+          </div>
+          <button
+            onClick={() => setView("hero")}
+            className="pointer-events-auto login-floating-chip login-floating-cta text-xs font-black"
+            style={{ animationDelay: "0.6s" }}
+          >
+            Get Started
+          </button>
         </div>
-        <div className="hidden md:flex items-center gap-6">
-          <button
-            onClick={() => setView("messages")}
-            className={`text-xs font-bold transition-colors ${view === "messages" ? "text-blue-600 dark:text-blue-400" : "text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"}`}
-          >
-            Messages
-          </button>
-          <button
-            onClick={() => setView("communities")}
-            className={`text-xs font-bold transition-colors ${view === "communities" ? "text-blue-600 dark:text-blue-400" : "text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"}`}
-          >
-            Communities
-          </button>
-          <button
-            onClick={() => setView("about")}
-            className={`text-xs font-bold transition-colors ${view === "about" ? "text-blue-600 dark:text-blue-400" : "text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"}`}
-          >
-            About
-          </button>
-        </div>
-        <button
-          onClick={() => setView("hero")}
-          className="bg-blue-600 text-white px-6 py-2 rounded-xl text-xs font-black shadow-lg shadow-blue-200 dark:shadow-blue-900/20 hover:bg-blue-700 transition-all active:scale-95"
-        >
-          Get Started
-        </button>
       </header>
-      <main className="flex-1 w-full max-w-6xl px-6 flex flex-col items-center justify-center relative z-10">
+      <main className="flex-1 w-full max-w-6xl px-6 pt-16 flex flex-col items-center justify-center relative z-20">
         {renderSection()}
       </main>
     </div>

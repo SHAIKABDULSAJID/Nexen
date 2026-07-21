@@ -954,7 +954,7 @@ const App: React.FC = () => {
         return (
           <div className="md:col-span-12 lg:col-span-6 space-y-4 lg:h-[calc(100vh-88px)] lg:overflow-y-auto lg:pr-1">
             <CreatePost onPost={handlePost} currentUser={currentUser} />
-            <div className="space-y-4 pb-20 md:pb-0">
+            <div className="space-y-6 pb-20 md:pb-0">
               {posts.map((post) => (
                 <PostCard
                   key={post.id}
@@ -1038,9 +1038,10 @@ const App: React.FC = () => {
                     />
                   ))
               ) : (
-                <div className="bg-white dark:bg-white/5 p-12 text-center rounded-2xl border border-dashed border-slate-200 dark:border-white/10">
-                  <p className="text-sm text-slate-400 font-bold italic">
-                    No saved posts yet.
+                <div className="bg-white dark:bg-white/5 p-12 text-center rounded-[32px] border border-dashed border-slate-200 dark:border-white/10">
+                  <Sparkles className="w-12 h-12 text-slate-300 dark:text-white/20 mx-auto mb-3" />
+                  <p className="text-sm text-slate-500 dark:text-slate-400 font-bold italic">
+                    No saved posts yet. Bookmark the ones worth coming back to.
                   </p>
                 </div>
               )}
@@ -1077,7 +1078,7 @@ const App: React.FC = () => {
               </div>
               <button
                 onClick={() => setIsPitchModalOpen(true)}
-                className="bg-blue-600 text-white px-6 py-3 rounded-2xl text-sm font-black flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 dark:shadow-none"
+                className="bg-sky-600 text-white px-6 py-3 rounded-full text-sm font-black flex items-center gap-2 hover:bg-sky-700 transition-all hover:-translate-y-0.5 shadow-lg shadow-sky-100/70 dark:shadow-none"
               >
                 <Sparkles className="w-4 h-4" /> Submit Idea
               </button>
@@ -1086,30 +1087,30 @@ const App: React.FC = () => {
             <div className="flex gap-4 px-1">
               <button
                 onClick={() => setPitchSort("top")}
-                className={`px-6 py-2.5 rounded-full text-xs font-black transition-all ${
+                className={`px-6 py-2.5 rounded-full text-xs font-black transition-all hover:-translate-y-0.5 ${
                   pitchSort === "top"
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800"
+                    ? "bg-sky-600 text-white shadow-lg shadow-sky-500/20"
+                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
                 }`}
               >
                 Top Voted
               </button>
               <button
                 onClick={() => setPitchSort("newest")}
-                className={`px-6 py-2.5 rounded-full text-xs font-black transition-all ${
+                className={`px-6 py-2.5 rounded-full text-xs font-black transition-all hover:-translate-y-0.5 ${
                   pitchSort === "newest"
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800"
+                    ? "bg-sky-600 text-white shadow-lg shadow-sky-500/20"
+                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
                 }`}
               >
                 Newest
               </button>
               <button
                 onClick={() => setPitchSort("random")}
-                className={`px-6 py-2.5 rounded-full text-xs font-black transition-all ${
+                className={`px-6 py-2.5 rounded-full text-xs font-black transition-all hover:-translate-y-0.5 ${
                   pitchSort === "random"
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800"
+                    ? "bg-sky-600 text-white shadow-lg shadow-sky-500/20"
+                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
                 }`}
               >
                 Random
@@ -1138,14 +1139,14 @@ const App: React.FC = () => {
                   />
                 ))
               ) : (
-                <div className="bg-white dark:bg-white/5 p-12 text-center rounded-2xl border border-dashed border-slate-200 dark:border-white/10">
+                <div className="bg-white dark:bg-white/5 p-12 text-center rounded-[32px] border border-dashed border-slate-200 dark:border-white/10">
                   <Rocket className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
                   <p className="text-sm text-slate-600 dark:text-slate-400 font-bold mb-4">
                     No pitches yet. Be the first to launch an idea!
                   </p>
                   <button
                     onClick={() => setIsPitchModalOpen(true)}
-                    className="inline-block bg-blue-600 text-white px-6 py-2 rounded-xl text-xs font-black hover:bg-blue-700 transition-all"
+                    className="inline-block bg-sky-600 text-white px-6 py-2 rounded-full text-xs font-black hover:bg-sky-700 transition-all hover:-translate-y-0.5"
                   >
                     Submit Your First Idea
                   </button>

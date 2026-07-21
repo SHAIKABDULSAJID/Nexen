@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TRENDING_NEWS } from "../constants";
-import { TrendingUp, ExternalLink, RefreshCcw, Loader2 } from "lucide-react";
+import { TrendingUp, ExternalLink, RefreshCcw, Loader2, Users } from "lucide-react";
 import Logo from "./Logo";
 import { getAvatarSrc } from "../utils/avatar";
 import { User } from "../types";
@@ -64,17 +64,17 @@ const RightPanel: React.FC<RightPanelProps> = ({
   return (
     <div className="hidden lg:block lg:col-span-3 lg:h-[calc(100vh-88px)] lg:overflow-y-auto lg:pr-1 space-y-6 self-start">
       {/* Trending News */}
-      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-all hover:shadow-lg hover:shadow-blue-200 dark:hover:shadow-blue-900/20 duration-300">
+      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-[28px] border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/70 dark:hover:shadow-slate-950/30 duration-300">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-rose-500" />
-            <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+            <h3 className="font-bold text-slate-900 dark:text-white text-sm tracking-tight">
               Tech News
             </h3>
           </div>
           <button
             onClick={handleRefresh}
-            className={`text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all ${isRefreshing ? "rotate-180 scale-110" : ""}`}
+            className={`text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-all hover:-translate-y-0.5 ${isRefreshing ? "rotate-180 scale-110" : ""}`}
           >
             {isRefreshing ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -115,9 +115,9 @@ const RightPanel: React.FC<RightPanelProps> = ({
       </div>
 
       {/* Suggested Founders */}
-      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-all hover:shadow-lg hover:shadow-blue-200 dark:hover:shadow-blue-900/20 duration-300">
+      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-[24px] border border-slate-200 dark:border-white/10 p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/70 dark:hover:shadow-slate-950/30 duration-300">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-slate-900 dark:text-white text-sm">
+            <h3 className="font-bold text-slate-900 dark:text-white text-sm tracking-tight">
             Suggested Founders
           </h3>
           <button
@@ -137,9 +137,12 @@ const RightPanel: React.FC<RightPanelProps> = ({
               Loading founders...
             </p>
           ) : displayedFounders.length === 0 ? (
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              No founders found in database.
-            </p>
+            <div className="flex flex-col items-center gap-2 py-2">
+              <Users className="w-8 h-8 text-slate-300 dark:text-white/20" />
+              <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
+                No founders found in database.
+              </p>
+            </div>
           ) : (
             displayedFounders.map((founder, idx) => (
               <Suggestion
@@ -168,7 +171,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
       {/* Footer Links */}
       <div className="px-4 text-[10px] text-slate-500 dark:text-slate-400 flex flex-wrap gap-x-4 gap-y-2 font-medium">
         <div className="w-full mb-4">
-          <Logo className="h-6" textColor="text-blue-600 dark:text-white" />
+          <Logo className="h-6" textColor="text-sky-700 dark:text-white" />
         </div>
         <a
           href="#"
@@ -176,7 +179,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
             e.preventDefault();
             alert("Redirecting to About");
           }}
-          className="hover:underline hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          className="hover:underline hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
         >
           About
         </a>
@@ -186,7 +189,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
             e.preventDefault();
             alert("Redirecting to Accessibility");
           }}
-          className="hover:underline hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          className="hover:underline hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
         >
           Accessibility
         </a>
@@ -196,7 +199,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
             e.preventDefault();
             alert("Redirecting to Help Center");
           }}
-          className="hover:underline hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          className="hover:underline hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
         >
           Help Center
         </a>
@@ -206,7 +209,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
             e.preventDefault();
             alert("Redirecting to Privacy & Terms");
           }}
-          className="hover:underline hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          className="hover:underline hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
         >
           Privacy & Terms
         </a>
@@ -216,7 +219,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
             e.preventDefault();
             alert("Redirecting to Ad Choices");
           }}
-          className="hover:underline hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          className="hover:underline hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
         >
           Ad Choices
         </a>

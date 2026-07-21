@@ -14,6 +14,7 @@ import {
   Settings,
   Star,
   HelpCircle,
+  Sparkles,
 } from "lucide-react";
 import Logo from "./Logo";
 import { User, Post } from "../types";
@@ -166,7 +167,7 @@ const Layout: React.FC<LayoutProps> = ({
                     }
                   }}
                   placeholder="Search startups, builders..."
-                  className="pl-10 pr-4 py-2 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full w-72 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-500"
+                  className="pl-10 pr-4 py-2 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full w-72 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500 outline-none transition-all placeholder:text-slate-500"
                 />
                 {searchQuery && (
                   <button
@@ -187,7 +188,17 @@ const Layout: React.FC<LayoutProps> = ({
                   {searchResults.users.length === 0 &&
                   searchResults.posts.length === 0 ? (
                     <div className="p-4 text-center text-slate-500 dark:text-slate-400 text-sm">
-                      No results found
+                      <div className="py-4 flex flex-col items-center gap-2">
+                        <Sparkles className="w-8 h-8 text-slate-300 dark:text-white/20" />
+                        <div>
+                          <p className="font-bold text-slate-700 dark:text-slate-300">
+                            No results found
+                          </p>
+                          <p className="text-xs mt-1 text-slate-400 dark:text-slate-500">
+                            Try a different founder, startup, or keyword.
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <>
@@ -199,7 +210,7 @@ const Layout: React.FC<LayoutProps> = ({
                           {searchResults.users.map((user) => (
                             <div
                               key={user.id}
-                              className="flex items-center gap-3 p-2 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl cursor-pointer transition-colors"
+                              className="flex items-center gap-3 p-2 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl cursor-pointer transition-all hover:-translate-y-0.5"
                               onClick={() => {
                                 setShowSearch(false);
                                 if (onUserClick) onUserClick(user);

@@ -9,6 +9,7 @@ import {
   Info,
   MoreVertical,
   ChevronLeft,
+  MessageSquare,
 } from "lucide-react";
 import { getAvatarSrc } from "../utils/avatar";
 
@@ -385,9 +386,9 @@ const MessagingView: React.FC<MessagingViewProps> = ({
               <div
                 key={follower.id}
                 onClick={() => startChatWithFollower(follower.id)}
-                className={`flex items-center gap-3 p-4 cursor-pointer transition-colors border-l-4 ${
+                className={`flex items-center gap-3 p-4 cursor-pointer transition-all hover:-translate-y-0.5 border-l-4 ${
                   isSelected
-                    ? "bg-white dark:bg-white/10 border-blue-600 dark:border-blue-500"
+                    ? "bg-white dark:bg-white/10 border-sky-600 dark:border-sky-500"
                     : "bg-transparent border-transparent hover:bg-slate-100 dark:hover:bg-white/5"
                 }`}
               >
@@ -422,9 +423,9 @@ const MessagingView: React.FC<MessagingViewProps> = ({
               <div
                 key={chat.id}
                 onClick={() => setSelectedChatId(chat.id)}
-                className={`flex items-center gap-3 p-4 cursor-pointer transition-colors border-l-4 ${
+                className={`flex items-center gap-3 p-4 cursor-pointer transition-all hover:-translate-y-0.5 border-l-4 ${
                   selectedChatId === chat.id
-                    ? "bg-white dark:bg-white/10 border-blue-600 dark:border-blue-500"
+                    ? "bg-white dark:bg-white/10 border-sky-600 dark:border-sky-500"
                     : "bg-transparent border-transparent hover:bg-slate-100 dark:hover:bg-white/5"
                 }`}
               >
@@ -463,9 +464,12 @@ const MessagingView: React.FC<MessagingViewProps> = ({
               </div>
             ))
           ) : (
-            <p className="px-4 pb-4 text-xs text-slate-500 dark:text-slate-400">
-              No recent chats yet. Start a conversation with a follower.
-            </p>
+            <div className="px-4 pb-4 text-center">
+              <MessageSquare className="w-10 h-10 text-slate-300 dark:text-white/20 mx-auto mb-2" />
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                No recent chats yet. Start a conversation with a follower.
+              </p>
+            </div>
           )}
         </div>
       </div>
@@ -492,16 +496,16 @@ const MessagingView: React.FC<MessagingViewProps> = ({
                 </div>
               </div>
               <div className="flex items-center gap-6 text-slate-400 mx-auto">
-                <button className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <button className="hover:text-sky-600 dark:hover:text-sky-400 transition-all hover:-translate-y-0.5">
                   <Phone className="w-5 h-5" />
                 </button>
-                <button className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <button className="hover:text-sky-600 dark:hover:text-sky-400 transition-all hover:-translate-y-0.5">
                   <Video className="w-5 h-5" />
                 </button>
-                <button className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <button className="hover:text-sky-600 dark:hover:text-sky-400 transition-all hover:-translate-y-0.5">
                   <Info className="w-5 h-5" />
                 </button>
-                <button className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <button className="hover:text-sky-600 dark:hover:text-sky-400 transition-all hover:-translate-y-0.5">
                   <MoreVertical className="w-5 h-5" />
                 </button>
               </div>
@@ -536,9 +540,9 @@ const MessagingView: React.FC<MessagingViewProps> = ({
                       className={`flex flex-col max-w-[70%] ${msg.senderId === currentUser.id ? "ml-auto items-end" : "items-start"}`}
                     >
                       <div
-                        className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                        className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm transition-all hover:-translate-y-0.5 ${
                           msg.senderId === currentUser.id
-                            ? "bg-blue-600 text-white rounded-tr-none"
+                            ? "bg-sky-600 text-white rounded-tr-none"
                             : "bg-white dark:bg-white/10 text-slate-800 dark:text-white rounded-tl-none border border-slate-200 dark:border-transparent"
                         }`}
                       >
@@ -546,7 +550,7 @@ const MessagingView: React.FC<MessagingViewProps> = ({
                         <div
                           className={`mt-1 text-[10px] text-right ${
                             msg.senderId === currentUser.id
-                              ? "text-blue-100"
+                              ? "text-sky-100"
                               : "text-slate-400"
                           }`}
                         >
@@ -571,7 +575,7 @@ const MessagingView: React.FC<MessagingViewProps> = ({
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Type your message..."
-                    className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all pr-12"
+                    className="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-sky-500 outline-none transition-all pr-12"
                   />
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
                     {/* Add emoji or attachment icons here if desired */}
@@ -580,7 +584,7 @@ const MessagingView: React.FC<MessagingViewProps> = ({
                 <button
                   type="submit"
                   disabled={!newMessage.trim()}
-                  className="bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 dark:shadow-blue-900/20 disabled:opacity-50 disabled:shadow-none shrink-0"
+                  className="bg-sky-600 text-white p-3 rounded-xl hover:bg-sky-700 transition-all shadow-lg shadow-sky-200 dark:shadow-sky-900/20 disabled:opacity-50 disabled:shadow-none shrink-0"
                 >
                   <Send className="w-5 h-5" />
                 </button>

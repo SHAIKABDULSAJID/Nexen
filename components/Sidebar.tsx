@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div className="hidden lg:block lg:col-span-3 lg:h-[calc(100vh-88px)] lg:overflow-y-auto lg:pr-1 space-y-6 pb-10">
       {/* Navigation List */}
-      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 p-2 shadow-sm space-y-1 transition-colors duration-300">
+      <div className="bg-white/90 dark:bg-white/10 backdrop-blur-md rounded-[28px] border border-slate-200 dark:border-white/10 p-2 shadow-sm space-y-1 transition-all duration-300 hover:shadow-md">
         <NavigationItem
           icon={<Home className="w-[18px] h-[18px]" />}
           label="Home"
@@ -83,10 +83,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Profile Details */}
-      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 p-2 shadow-sm transition-colors duration-300">
+      <div className="bg-gradient-to-b from-white to-slate-50/80 dark:from-white/10 dark:to-white/5 backdrop-blur-md rounded-[32px] border border-slate-200/80 dark:border-white/10 p-2 shadow-sm transition-all duration-300 hover:shadow-md">
         <div
           onClick={() => onTabChange("profile" as any)}
-          className="bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm transition-colors duration-300 cursor-pointer hover:border-blue-500/30 group/profile"
+          className="bg-white dark:bg-white/10 backdrop-blur-md rounded-[30px] border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm transition-all duration-300 cursor-pointer hover:border-sky-500/20 hover:-translate-y-0.5 group/profile"
         >
           <div className="h-16 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-600 opacity-80" />
           <div className="px-4 pb-4 -mt-8">
@@ -94,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               <img
                 src={getAvatarSrc(currentUser.avatar)}
                 alt={currentUser.name}
-                className="w-16 h-16 rounded-2xl border-4 border-white dark:border-white/10 object-cover shadow-sm group-hover/profile:scale-105 transition-transform"
+                className="w-16 h-16 rounded-[20px] border-4 border-white dark:border-white/10 object-cover shadow-sm group-hover/profile:scale-105 transition-transform"
               />
             </div>
             <h2 className="font-bold text-slate-900 dark:text-white leading-none group-hover/profile:text-blue-600 dark:group-hover/profile:text-blue-400 transition-colors">
@@ -162,7 +162,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Communities */}
-      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 p-4 shadow-sm transition-colors duration-300">
+      <div className="bg-white/95 dark:bg-white/10 backdrop-blur-md rounded-[24px] border border-slate-200 dark:border-white/10 p-4 shadow-sm transition-all duration-300 hover:shadow-md">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-bold text-slate-900 dark:text-white text-sm">
             Communities
@@ -177,11 +177,11 @@ const Sidebar: React.FC<SidebarProps> = ({
               className="flex items-center justify-between group cursor-pointer"
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/5 flex items-center justify-center text-sm group-hover:bg-blue-50 dark:group-hover:bg-blue-500/20 transition-colors">
+                <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center text-sm group-hover:bg-sky-50 dark:group-hover:bg-sky-500/20 transition-all group-hover:-translate-y-0.5">
                   {community.icon}
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover:text-sky-700 dark:group-hover:text-sky-300 transition-colors">
                     {community.name}
                   </p>
                   <p className="text-[10px] text-slate-500 dark:text-slate-400">
@@ -193,7 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           ))}
           <button
             onClick={onDiscoverMore}
-            className="w-full py-2.5 text-xs font-bold text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 rounded-xl transition-colors mt-2"
+            className="w-full py-2.5 text-xs font-bold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-500/10 hover:bg-sky-100 dark:hover:bg-sky-500/20 rounded-full transition-all hover:-translate-y-0.5 mt-2"
           >
             Discover more
           </button>

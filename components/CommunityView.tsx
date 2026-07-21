@@ -33,11 +33,11 @@ const CommunityView: React.FC<CommunityViewProps> = ({
   return (
     <div className="md:col-span-12 lg:col-span-6 space-y-4">
       {/* Community Header */}
-      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm mb-6 transition-colors duration-300">
+      <div className="bg-white dark:bg-white/10 backdrop-blur-md rounded-[32px] border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm mb-6 transition-all duration-300 hover:shadow-md">
         <div className="h-24 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 dark:from-blue-900/40 dark:via-indigo-900/40 dark:to-purple-900/40 relative">
           <button
             onClick={onBack}
-            className="absolute top-4 left-4 p-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur shadow-sm rounded-full hover:bg-white/80 dark:hover:bg-slate-900/80 transition-colors"
+            className="absolute top-4 left-4 p-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur shadow-sm rounded-full hover:bg-white/80 dark:hover:bg-slate-900/80 transition-all hover:-translate-x-0.5"
           >
             <ChevronLeft className="w-5 h-5 text-slate-900 dark:text-white" />
           </button>
@@ -45,7 +45,7 @@ const CommunityView: React.FC<CommunityViewProps> = ({
         <div className="px-6 pb-6 -mt-8 relative">
           <div className="flex items-end justify-between">
             <div className="flex items-end gap-4">
-              <div className="w-20 h-20 rounded-[28px] bg-white dark:bg-slate-900 border-4 border-white dark:border-slate-900 shadow-md flex items-center justify-center text-4xl">
+              <div className="w-20 h-20 rounded-[30px] bg-white dark:bg-slate-900 border-4 border-white dark:border-slate-900 shadow-md flex items-center justify-center text-4xl">
                 {community.icon}
               </div>
               <div className="mb-2">
@@ -58,7 +58,7 @@ const CommunityView: React.FC<CommunityViewProps> = ({
               </div>
             </div>
             <div className="flex gap-2 mb-2">
-              <button className="px-5 py-2.5 bg-blue-600 text-white text-xs font-black rounded-xl shadow-lg shadow-blue-200 dark:shadow-blue-900/20 hover:bg-blue-700 transition-all">
+              <button className="px-5 py-2.5 bg-sky-600 text-white text-xs font-black rounded-full shadow-lg shadow-sky-200/60 dark:shadow-sky-900/20 hover:bg-sky-700 transition-all hover:-translate-y-0.5">
                 Join
               </button>
               <button className="p-2.5 border border-slate-200 dark:border-white/10 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 text-slate-500 dark:text-slate-400">
@@ -101,10 +101,10 @@ const CommunityView: React.FC<CommunityViewProps> = ({
           />
         ))}
         {posts.length === 0 && (
-          <div className="bg-slate-50 dark:bg-white/5 p-12 text-center rounded-2xl border border-dashed border-slate-300 dark:border-white/10">
+          <div className="bg-slate-50 dark:bg-white/5 p-12 text-center rounded-[28px] border border-dashed border-slate-300 dark:border-white/10">
             <Info className="w-12 h-12 text-slate-300 dark:text-white/20 mx-auto mb-3" />
             <p className="text-sm text-slate-500 dark:text-slate-400 font-bold italic">
-              No discussions yet in this community.
+              No discussions yet. Be the first to spark the room.
             </p>
           </div>
         )}
