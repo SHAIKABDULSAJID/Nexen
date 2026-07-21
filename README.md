@@ -1,77 +1,211 @@
-# Nexen AI
+# Nexen
 
-A modern full-stack application with AI capabilities.
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Live-success" />
+  <img src="https://img.shields.io/badge/License-MIT-blue" />
+  <img src="https://img.shields.io/badge/Built%20With-TypeScript-3178C6" />
+  <img src="https://img.shields.io/badge/Platform-Web-orange" />
+</p>
 
-## Getting Started on Windows
+## Live Website
 
-### Prerequisites
+Visit Nexen here:
 
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [Git](https://git-scm.com/)
+https://thenexen.in
 
-### Installation
+---
 
-1. Clone the repository:
+## About Nexen
 
-   ```bash
-   git clone <repository-url>
-   cd nexen
-   ```
+Nexen is a social networking platform built exclusively for startup founders, entrepreneurs, innovators, and aspiring builders. It provides a dedicated space where startup-minded individuals can connect, share ideas, build meaningful relationships, and grow together.
 
-2. Install dependencies:
+Unlike traditional social media platforms, Nexen focuses entirely on the startup ecosystem by encouraging collaboration, knowledge sharing, networking, and innovation.
 
-   ```bash
-   npm install
-   ```
+Whether you're building your first startup or scaling your next venture, Nexen helps you find the right community.
 
-3. Set up environment variables:
-   - Copy `.env.example` to `.env`
-   - Fill in your `GEMINI_API_KEY` and other required variables.
-   - Set `MONGODB_URI` to your MongoDB Atlas URI (`mongodb+srv://...`).
+---
 
-### Running the App
+## Features
 
-#### Using VS Code (Recommended)
+### Startup Community
+- Connect with founders and entrepreneurs.
+- Build a strong startup-focused network.
+- Follow other members and stay updated.
 
-1. Open the project folder in VS Code.
-2. Go to the **Run and Debug** view (Ctrl+Shift+D).
-3. Select **Debug Server** and press F5.
-4. The app will be available at `http://localhost:3000`.
+### Startup Idea Sharing
+- Share startup ideas with the community.
+- Receive feedback and suggestions.
+- Discover innovative projects from other founders.
 
-#### Using Terminal
+### User Profiles
+- Create a professional profile.
+- Showcase your startup journey.
+- Grow your network through followers.
+
+### Community Discussions
+- Participate in startup-related conversations.
+- Exchange knowledge and experiences.
+- Learn from the community.
+
+### Networking
+- Connect with like-minded individuals.
+- Expand your professional startup network.
+- Discover potential collaborators.
+
+### Modern User Experience
+- Responsive design
+- Fast performance
+- Clean and intuitive interface
+
+---
+
+## Tech Stack
+
+### Frontend
+- React
+- Vite
+- TypeScript
+
+### Backend
+- Next.js
+
+### Database
+- MongoDB
+
+---
+
+## Project Structure
+
+```
+Nexen/
+│
+├── frontend/
+├── backend/
+├── public/
+├── components/
+├── pages/
+├── api/
+├── database/
+├── assets/
+└── README.md
+```
+
+*(Project structure may vary depending on future updates.)*
+
+---
+
+## Getting Started
+
+### Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/Nexen.git
+```
+
+### Navigate to the project
+
+```bash
+cd Nexen
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Configure Environment Variables
+
+Create a `.env` file in the appropriate directory and add the required environment variables.
+
+Example:
+
+```env
+MONGODB_URI=your_database_connection
+NEXTAUTH_SECRET=your_secret
+NEXTAUTH_URL=http://localhost:3000
+```
+
+**Note:** Never commit your `.env` file to GitHub.
+
+### Start the development server
 
 ```bash
 npm run dev
 ```
 
-### Building for Production
+---
+
+## Future Roadmap
+
+- AI-powered startup recommendations
+- Startup verification system
+- Founder matching
+- Investor discovery
+- Startup showcase pages
+- Events and networking
+- Notifications
+- Mobile application
+- Enhanced messaging system
+
+---
+
+## Contributing
+
+Contributions are welcome.
+
+1. Fork the repository.
+2. Create a new branch.
 
 ```bash
-npm run build
-npm start
+git checkout -b feature-name
 ```
 
-## Deploying to Render
+3. Commit your changes.
 
-1. Push this project to GitHub.
-2. In Render, click **New +** -> **Blueprint** and select your repo.
-3. Render will detect [render.yaml](render.yaml) and create the web service.
-4. In Render environment variables, set:
-   - `MONGODB_URI` (Atlas URI)
-   - `GEMINI_API_KEY` (or `API_KEY`)
-   - `JWT_SECRET`
-5. Deploy and open your Render URL after build completes.
+```bash
+git commit -m "Add new feature"
+```
 
-Render uses:
+4. Push the branch.
 
-- Build command: `npm install && npm run build`
-- Start command: `npm start`
-- Health check path: `/api/health`
+```bash
+git push origin feature-name
+```
 
-## VS Code Extensions
+5. Open a Pull Request.
 
-For the best experience, we recommend installing the following extensions:
+---
 
-- ESLint
-- Prettier
-- Tailwind CSS IntelliSense
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+## Author
+
+**Shaik Abdul Sajid**
+
+GitHub:
+https://github.com/SHAIKABDULSAJID
+
+---
+
+## Acknowledgements
+
+Thanks to the open-source community and everyone who contributes to making startup communities stronger through technology.
+
+---
+
+## Support
+
+If you found this project helpful, consider giving it a ⭐ on GitHub.
+
+It helps others discover the project and supports future development.
+
+---
+
+## Vision
+
+Nexen aims to become the go-to platform where startup founders, entrepreneurs, innovators, and creators connect, collaborate, share ideas, and build the next generation of successful startups together.
