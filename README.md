@@ -92,49 +92,7 @@ Nexen/
 
 *(Project structure may vary depending on future updates.)*
 
----
 
-## Getting Started
-
-### Clone the repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/Nexen.git
-```
-
-### Navigate to the project
-
-```bash
-cd Nexen
-```
-
-### Install dependencies
-
-```bash
-npm install
-```
-
-### Configure Environment Variables
-
-Create a `.env` file in the appropriate directory and add the required environment variables.
-
-Example:
-
-```env
-MONGODB_URI=your_database_connection
-NEXTAUTH_SECRET=your_secret
-NEXTAUTH_URL=http://localhost:3000
-```
-
-**Note:** Never commit your `.env` file to GitHub.
-
-### Start the development server
-
-```bash
-npm run dev
-```
-
----
 
 ## Future Roadmap
 
